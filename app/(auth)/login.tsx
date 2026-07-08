@@ -1,6 +1,7 @@
 import { Link, useRouter } from "expo-router";
 import { useRef, useState } from "react";
 import {
+  Image,
   KeyboardAvoidingView,
   Platform,
   Pressable,
@@ -64,12 +65,12 @@ export default function Login() {
       >
         <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
           <Pressable onPress={onLogoTap} hitSlop={12}>
-            <View style={styles.plaque}>
-              <Text style={styles.plaqueTop}>LONGHORN</Text>
-              <Text style={styles.plaqueBottom}>CAR WASH</Text>
-            </View>
+            <Image
+              source={require("../../assets/longhorn-logo.png")}
+              style={styles.logo}
+              resizeMode="contain"
+            />
           </Pressable>
-          <Text style={styles.city}>JUSTIN, TEXAS</Text>
           <Text style={styles.tagline}>Members wash more. Sign in to your account.</Text>
 
           <View style={{ gap: spacing.md, marginTop: spacing.xl }}>
@@ -113,37 +114,12 @@ const styles = StyleSheet.create({
     width: "100%",
     alignSelf: "center",
   },
-  plaque: {
+  logo: {
+    width: 250,
+    aspectRatio: 649 / 317,
     alignSelf: "center",
-    backgroundColor: colors.primary,
-    borderRadius: 20,
-    paddingVertical: 14,
-    paddingHorizontal: 28,
-    alignItems: "center",
   },
-  plaqueTop: {
-    color: colors.onPrimary,
-    fontSize: 34,
-    fontWeight: "900",
-    letterSpacing: 1,
-    lineHeight: 36,
-  },
-  plaqueBottom: {
-    color: colors.onPrimary,
-    fontSize: 17,
-    fontWeight: "800",
-    letterSpacing: 5,
-    marginTop: 2,
-  },
-  city: {
-    color: colors.primary,
-    textAlign: "center",
-    marginTop: spacing.sm,
-    fontSize: 12,
-    fontWeight: "800",
-    letterSpacing: 3,
-  },
-  tagline: { color: colors.textMuted, textAlign: "center", marginTop: spacing.sm },
+  tagline: { color: colors.textMuted, textAlign: "center", marginTop: spacing.md },
   error: { color: colors.danger, fontSize: 14 },
   linkRow: { flexDirection: "row", justifyContent: "center", paddingVertical: spacing.sm },
   muted: { color: colors.textMuted },
