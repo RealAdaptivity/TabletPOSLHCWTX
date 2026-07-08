@@ -3,6 +3,9 @@ import { useCallback, useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
+  KeyboardAvoidingView,
+  Modal,
+  Platform,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -10,7 +13,7 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Button, Card } from "@/components/ui";
+import { Button, Card, Field, ScreenTitle } from "@/components/ui";
 import { useCsa } from "@/lib/csa";
 import { supabase } from "@/lib/supabase";
 import type { MembershipPlan, SaleType, ShiftSummary } from "@/lib/database.types";
@@ -39,6 +42,22 @@ export default function Pos() {
   const [ticket, setTicket] = useState<Ticket | null>(null);
   const [charging, setCharging] = useState(false);
 
+  // Member details captured on membership sign-ups.
+  const [memberOpen, setMemberOpen] = useState(false);
+  const [mFirst, setMFirst] = useState("");
+  const [mLast, setMLast] = useState("");
+  const [mPhone, setMPhone] = useState("");
+  const [mEmail, setMEmail] = useState("");
+  const [mPlate, setMPlate] = useState("");
+
+  function resetMember() {
+    setMFirst("");
+    setMLast("");
+    setMPhone("");
+    setMEmail("");
+    setMPlate("");
+  }
+
   // Guard against landing here without a verified PIN (e.g. reload).
   useEffect(() => {
     if (!employee) router.replace("/csa/pin");
@@ -61,7 +80,13 @@ export default function Pos() {
     })();
   }, []);
 
-  async function charge() {
+  async function charge(member?: {
+    firstName: string;
+    lastName: string;
+    phone: string;
+    email: string;
+    licensePlate: string;
+  }) {
     if (!ticket) return;
     setCharging(true);
     try {
@@ -72,15 +97,48 @@ export default function Pos() {
         planId: ticket.planId ?? null,
         paymentMethod: "card",
         points: ticket.points,
+        member,
       });
+      const label = ticket.label;
+      const amount = ticket.amountCents;
       setTicket(null);
+      setMemberOpen(false);
+      resetMember();
       await refresh();
-      Alert.alert("Sale complete", `${ticket.label} — ${formatCents(ticket.amountCents)}`);
+      Alert.alert("Sale complete", `${label} — ${formatCents(amount)}`);
     } catch (e: any) {
       Alert.alert("Could not record sale", e?.message ?? "Unknown error");
     } finally {
       setCharging(false);
     }
+  }
+
+  // Membership sales collect the new member's details before charging.
+  function onChargePressed() {
+    if (!ticket) return;
+    if (ticket.saleType === "membership") {
+      setMemberOpen(true);
+    } else {
+      charge();
+    }
+  }
+
+  function completeMemberSale() {
+    if (!mFirst.trim() || !mLast.trim()) {
+      Alert.alert("Member details", "Enter the member's first and last name.");
+      return;
+    }
+    if (!mEmail.trim() && !mPhone.trim()) {
+      Alert.alert("Member details", "Enter an email or phone so the membership can sync to their account.");
+      return;
+    }
+    charge({
+      firstName: mFirst,
+      lastName: mLast,
+      phone: mPhone,
+      email: mEmail,
+      licensePlate: mPlate,
+    });
   }
 
   function confirmEndShift() {
@@ -180,11 +238,72 @@ export default function Pos() {
               <Text style={styles.ticketAmount}>{formatCents(ticket.amountCents)}</Text>
             </View>
             <View style={{ width: 160 }}>
-              <Button title={`Charge`} onPress={charge} loading={charging} />
+              <Button
+                title={ticket.saleType === "membership" ? "Sign Up" : "Charge"}
+                onPress={onChargePressed}
+                loading={charging && !memberOpen}
+              />
             </View>
           </View>
         </View>
       ) : null}
+
+      {/* Member details for a membership sign-up */}
+      <Modal
+        visible={memberOpen}
+        animationType="slide"
+        transparent
+        onRequestClose={() => setMemberOpen(false)}
+      >
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : undefined}
+          style={styles.modalBackdrop}
+        >
+          <Card style={styles.modalCard}>
+            <ScreenTitle
+              title="New member"
+              subtitle={ticket ? `${ticket.label} · ${formatCents(ticket.amountCents)}` : undefined}
+            />
+            <View style={{ gap: spacing.md }}>
+              <View style={{ flexDirection: "row", gap: spacing.md }}>
+                <View style={{ flex: 1 }}>
+                  <Field label="First name" value={mFirst} onChangeText={setMFirst} placeholder="Alex" />
+                </View>
+                <View style={{ flex: 1 }}>
+                  <Field label="Last name" value={mLast} onChangeText={setMLast} placeholder="Rivera" />
+                </View>
+              </View>
+              <Field
+                label="Phone"
+                value={mPhone}
+                onChangeText={setMPhone}
+                keyboardType="phone-pad"
+                placeholder="(555) 123-4567"
+              />
+              <Field
+                label="Email"
+                value={mEmail}
+                onChangeText={setMEmail}
+                autoCapitalize="none"
+                keyboardType="email-address"
+                placeholder="you@example.com"
+              />
+              <Field
+                label="License plate (optional)"
+                value={mPlate}
+                onChangeText={setMPlate}
+                autoCapitalize="characters"
+                placeholder="ABC1234"
+              />
+              <Text style={styles.memberHint}>
+                Email or phone links this membership to their app account and syncs to DRB.
+              </Text>
+              <Button title="Complete Sign-up & Charge" onPress={completeMemberSale} loading={charging} />
+              <Button title="Cancel" variant="ghost" onPress={() => setMemberOpen(false)} />
+            </View>
+          </Card>
+        </KeyboardAvoidingView>
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -281,4 +400,16 @@ const styles = StyleSheet.create({
   checkoutRow: { flexDirection: "row", alignItems: "center" },
   ticketLabel: { color: colors.text, fontWeight: "700", fontSize: 16 },
   ticketAmount: { color: colors.accent, fontWeight: "800", fontSize: 22, marginTop: 2 },
+  modalBackdrop: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.55)",
+    justifyContent: "flex-end",
+  },
+  modalCard: {
+    borderBottomLeftRadius: 0,
+    borderBottomRightRadius: 0,
+    borderRadius: radius.lg,
+    padding: spacing.lg,
+  },
+  memberHint: { color: colors.textMuted, fontSize: 12 },
 });

@@ -7,7 +7,9 @@
     "scheme": "lhcw",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
+    "icon": "./assets/icon.png",
     "splash": {
+      "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
       "backgroundColor": "#FFFFFF"
     },
@@ -16,7 +18,11 @@
       "bundleIdentifier": "com.lhcw.tabletpos"
     },
     "android": {
-      "package": "com.lhcw.tabletpos"
+      "package": "com.lhcw.tabletpos",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#FFFFFF"
+      }
     },
     "web": {
       "bundler": "metro",

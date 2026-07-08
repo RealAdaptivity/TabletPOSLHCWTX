@@ -131,6 +131,11 @@ export interface Database {
           p_plan_id?: string | null;
           p_payment_method?: string;
           p_points?: number;
+          p_first_name?: string | null;
+          p_last_name?: string | null;
+          p_phone?: string | null;
+          p_email?: string | null;
+          p_license_plate?: string | null;
         };
         Returns: string;
       };
