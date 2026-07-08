@@ -11,6 +11,14 @@ interface RecordSaleInput {
   planId?: string | null;
   paymentMethod?: string;
   points?: number;
+  /** Member contact details captured at the POS on membership sign-ups. */
+  member?: {
+    firstName?: string;
+    lastName?: string;
+    phone?: string;
+    email?: string;
+    licensePlate?: string;
+  };
 }
 
 interface CsaState {
@@ -57,6 +65,11 @@ export function CsaProvider({ children }: { children: React.ReactNode }) {
           p_plan_id: input.planId ?? null,
           p_payment_method: input.paymentMethod ?? "card",
           p_points: input.points ?? 0,
+          p_first_name: input.member?.firstName ?? null,
+          p_last_name: input.member?.lastName ?? null,
+          p_phone: input.member?.phone ?? null,
+          p_email: input.member?.email ?? null,
+          p_license_plate: input.member?.licensePlate ?? null,
         });
         if (error) throw error;
         return data as string;
