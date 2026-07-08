@@ -222,8 +222,8 @@ function ProductButton({
 }) {
   return (
     <Pressable onPress={onPress} style={[styles.product, active && styles.productActive]}>
-      <Text style={styles.productTitle}>{title}</Text>
-      <Text style={[styles.productPrice, active && { color: "#00131C" }]}>{price}</Text>
+      <Text style={[styles.productTitle, active && { color: colors.onPrimary }]}>{title}</Text>
+      <Text style={[styles.productPrice, active && { color: colors.onPrimary }]}>{price}</Text>
     </Pressable>
   );
 }

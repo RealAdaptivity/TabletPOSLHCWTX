@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Tablet POS LHCW",
+    "name": "Longhorn Car Wash",
     "slug": "tabletposlhcwtx",
     "version": "0.1.0",
     "orientation": "default",
@@ -9,7 +9,7 @@
     "newArchEnabled": true,
     "splash": {
       "resizeMode": "contain",
-      "backgroundColor": "#0B1220"
+      "backgroundColor": "#FFFFFF"
     },
     "ios": {
       "supportsTablet": true,

@@ -64,11 +64,12 @@ export default function Login() {
       >
         <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
           <Pressable onPress={onLogoTap} hitSlop={12}>
-            <View style={styles.logo}>
-              <Text style={styles.logoMark}>◒</Text>
+            <View style={styles.plaque}>
+              <Text style={styles.plaqueTop}>LONGHORN</Text>
+              <Text style={styles.plaqueBottom}>CAR WASH</Text>
             </View>
           </Pressable>
-          <Text style={styles.brand}>LHCW Wash Club</Text>
+          <Text style={styles.city}>JUSTIN, TEXAS</Text>
           <Text style={styles.tagline}>Members wash more. Sign in to your account.</Text>
 
           <View style={{ gap: spacing.md, marginTop: spacing.xl }}>
@@ -112,26 +113,37 @@ const styles = StyleSheet.create({
     width: "100%",
     alignSelf: "center",
   },
-  logo: {
-    width: 84,
-    height: 84,
-    borderRadius: 24,
-    backgroundColor: colors.surface,
-    borderWidth: 1,
-    borderColor: colors.border,
-    alignItems: "center",
-    justifyContent: "center",
+  plaque: {
     alignSelf: "center",
+    backgroundColor: colors.primary,
+    borderRadius: 20,
+    paddingVertical: 14,
+    paddingHorizontal: 28,
+    alignItems: "center",
   },
-  logoMark: { fontSize: 46, color: colors.primary, marginTop: -4 },
-  brand: {
-    color: colors.text,
-    fontSize: 28,
+  plaqueTop: {
+    color: colors.onPrimary,
+    fontSize: 34,
+    fontWeight: "900",
+    letterSpacing: 1,
+    lineHeight: 36,
+  },
+  plaqueBottom: {
+    color: colors.onPrimary,
+    fontSize: 17,
     fontWeight: "800",
-    textAlign: "center",
-    marginTop: spacing.md,
+    letterSpacing: 5,
+    marginTop: 2,
   },
-  tagline: { color: colors.textMuted, textAlign: "center", marginTop: spacing.xs },
+  city: {
+    color: colors.primary,
+    textAlign: "center",
+    marginTop: spacing.sm,
+    fontSize: 12,
+    fontWeight: "800",
+    letterSpacing: 3,
+  },
+  tagline: { color: colors.textMuted, textAlign: "center", marginTop: spacing.sm },
   error: { color: colors.danger, fontSize: 14 },
   linkRow: { flexDirection: "row", justifyContent: "center", paddingVertical: spacing.sm },
   muted: { color: colors.textMuted },

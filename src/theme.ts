@@ -1,16 +1,24 @@
-/** Shared design tokens. Dark, tablet-friendly car-wash palette. */
+/** Shared design tokens — Long Horn Car Wash brand: red (#A93837) on white. */
 export const colors = {
-  bg: "#0B1220",
-  surface: "#151E30",
-  surfaceAlt: "#1E2A42",
-  border: "#2A3852",
-  primary: "#2EC4F1", // wash-water cyan
-  primaryDark: "#1899C4",
-  accent: "#38E08A", // rewards green
-  danger: "#F1594A",
-  text: "#F5F8FF",
-  textMuted: "#93A3BE",
-  textFaint: "#5C6B85",
+  // Grounds & neutrals (warm off-white biased toward the brand red)
+  bg: "#F7F2F1",
+  surface: "#FFFFFF",
+  surfaceAlt: "#F2EAE9",
+  border: "#E8DEDC",
+
+  // Brand
+  primary: "#A93837", // Long Horn red
+  primaryDark: "#8C2C2B",
+  onPrimary: "#FFFFFF", // text/icons on a red fill
+
+  // Semantic (kept separate from the brand color)
+  accent: "#1F7A4D", // success — used sparingly for positive rewards/points
+  danger: "#C0392B", // destructive actions
+
+  // Text
+  text: "#22191A",
+  textMuted: "#6F6463",
+  textFaint: "#ABA0A0",
 };
 
 export const spacing = {
