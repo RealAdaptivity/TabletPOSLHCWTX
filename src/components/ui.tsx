@@ -53,7 +53,7 @@ export function Button({
       ]}
     >
       {loading ? (
-        <ActivityIndicator color={variant === "ghost" ? colors.primary : "#00131C"} />
+        <ActivityIndicator color={variant === "ghost" ? colors.primary : colors.onPrimary} />
       ) : (
         <Text
           style={[
@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
     minHeight: 50,
   },
   buttonGhost: { borderWidth: 1, borderColor: colors.primary },
-  buttonText: { color: "#00131C", fontWeight: "700", fontSize: 16 },
+  buttonText: { color: colors.onPrimary, fontWeight: "700", fontSize: 16 },
   label: { color: colors.textMuted, fontSize: 13, fontWeight: "600" },
   input: {
     backgroundColor: colors.surfaceAlt,

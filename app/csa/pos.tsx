@@ -31,15 +31,12 @@ const SINGLE_WASHES: Ticket[] = [
   { label: "Premium Wash", amountCents: 2000, saleType: "wash", points: 20 },
 ];
 
-const PAYMENT_METHODS = ["card", "cash"];
-
 export default function Pos() {
   const router = useRouter();
   const { employee, recordSale, shiftSummary, endShift } = useCsa();
   const [plans, setPlans] = useState<MembershipPlan[]>([]);
   const [summary, setSummary] = useState<ShiftSummary | null>(null);
   const [ticket, setTicket] = useState<Ticket | null>(null);
-  const [payment, setPayment] = useState("card");
   const [charging, setCharging] = useState(false);
 
   // Guard against landing here without a verified PIN (e.g. reload).
@@ -73,7 +70,7 @@ export default function Pos() {
         amountCents: ticket.amountCents,
         item: ticket.label,
         planId: ticket.planId ?? null,
-        paymentMethod: payment,
+        paymentMethod: "card",
         points: ticket.points,
       });
       setTicket(null);
@@ -173,17 +170,9 @@ export default function Pos() {
       {ticket ? (
         <View style={styles.checkout}>
           <View style={styles.paymentRow}>
-            {PAYMENT_METHODS.map((m) => (
-              <Pressable
-                key={m}
-                onPress={() => setPayment(m)}
-                style={[styles.payChip, payment === m && styles.payChipActive]}
-              >
-                <Text style={[styles.payChipText, payment === m && styles.payChipTextActive]}>
-                  {m.toUpperCase()}
-                </Text>
-              </Pressable>
-            ))}
+            <View style={[styles.payChip, styles.payChipActive]}>
+              <Text style={[styles.payChipText, styles.payChipTextActive]}>CARD</Text>
+            </View>
           </View>
           <View style={styles.checkoutRow}>
             <View style={{ flex: 1 }}>
@@ -222,8 +211,8 @@ function ProductButton({
 }) {
   return (
     <Pressable onPress={onPress} style={[styles.product, active && styles.productActive]}>
-      <Text style={styles.productTitle}>{title}</Text>
-      <Text style={[styles.productPrice, active && { color: "#00131C" }]}>{price}</Text>
+      <Text style={[styles.productTitle, active && { color: colors.onPrimary }]}>{title}</Text>
+      <Text style={[styles.productPrice, active && { color: colors.onPrimary }]}>{price}</Text>
     </Pressable>
   );
 }

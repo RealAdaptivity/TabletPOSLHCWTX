@@ -1,6 +1,7 @@
 import { Link, useRouter } from "expo-router";
 import { useRef, useState } from "react";
 import {
+  Image,
   KeyboardAvoidingView,
   Platform,
   Pressable,
@@ -64,11 +65,12 @@ export default function Login() {
       >
         <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
           <Pressable onPress={onLogoTap} hitSlop={12}>
-            <View style={styles.logo}>
-              <Text style={styles.logoMark}>◒</Text>
-            </View>
+            <Image
+              source={require("../../assets/longhorn-logo.png")}
+              style={styles.logo}
+              resizeMode="contain"
+            />
           </Pressable>
-          <Text style={styles.brand}>LHCW Wash Club</Text>
           <Text style={styles.tagline}>Members wash more. Sign in to your account.</Text>
 
           <View style={{ gap: spacing.md, marginTop: spacing.xl }}>
@@ -113,25 +115,11 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   logo: {
-    width: 84,
-    height: 84,
-    borderRadius: 24,
-    backgroundColor: colors.surface,
-    borderWidth: 1,
-    borderColor: colors.border,
-    alignItems: "center",
-    justifyContent: "center",
+    width: 250,
+    aspectRatio: 649 / 317,
     alignSelf: "center",
   },
-  logoMark: { fontSize: 46, color: colors.primary, marginTop: -4 },
-  brand: {
-    color: colors.text,
-    fontSize: 28,
-    fontWeight: "800",
-    textAlign: "center",
-    marginTop: spacing.md,
-  },
-  tagline: { color: colors.textMuted, textAlign: "center", marginTop: spacing.xs },
+  tagline: { color: colors.textMuted, textAlign: "center", marginTop: spacing.md },
   error: { color: colors.danger, fontSize: 14 },
   linkRow: { flexDirection: "row", justifyContent: "center", paddingVertical: spacing.sm },
   muted: { color: colors.textMuted },
