@@ -29,9 +29,9 @@ interface Ticket {
 
 // Single-wash menu (one-time washes rung up at the lane).
 const SINGLE_WASHES: Ticket[] = [
-  { label: "Express Wash", amountCents: 1000, saleType: "wash", points: 10 },
-  { label: "Deluxe Wash", amountCents: 1500, saleType: "wash", points: 15 },
-  { label: "Premium Wash", amountCents: 2000, saleType: "wash", points: 20 },
+  { label: "Good Wash", amountCents: 1000, saleType: "wash", points: 10 },
+  { label: "Better Wash", amountCents: 1500, saleType: "wash", points: 15 },
+  { label: "Best Wash", amountCents: 2000, saleType: "wash", points: 20 },
 ];
 
 export default function Pos() {
@@ -204,23 +204,26 @@ export default function Pos() {
 
         <Text style={styles.sectionTitle}>Memberships</Text>
         <View style={styles.grid}>
-          {plans.map((p) => (
-            <ProductButton
-              key={p.id}
-              title={p.name}
-              price={`${formatCents(p.price_cents)}/mo`}
-              active={ticket?.planId === p.id}
-              onPress={() =>
-                setTicket({
-                  label: `${p.name} Membership`,
-                  amountCents: p.price_cents,
-                  saleType: "membership",
-                  planId: p.id,
-                  points: 50,
-                })
-              }
-            />
-          ))}
+          {plans.map((p) => {
+            const mappedName = p.name === "Express" ? "Good" : p.name === "Deluxe" ? "Better" : p.name === "Premium" ? "Best" : p.name;
+            return (
+              <ProductButton
+                key={p.id}
+                title={mappedName}
+                price={`${formatCents(p.price_cents)}/mo`}
+                active={ticket?.planId === p.id}
+                onPress={() =>
+                  setTicket({
+                    label: `${mappedName} Membership`,
+                    amountCents: p.price_cents,
+                    saleType: "membership",
+                    planId: p.id,
+                    points: 50,
+                  })
+                }
+              />
+            );
+          })}
         </View>
       </ScrollView>
 
