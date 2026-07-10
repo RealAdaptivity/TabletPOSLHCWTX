@@ -68,13 +68,7 @@ export default function Home() {
           {membership ? (
             <>
               <Text style={styles.planName}>
-                {membership.membership_plans?.name === "Express"
-                  ? "Good"
-                  : membership.membership_plans?.name === "Deluxe"
-                  ? "Better"
-                  : membership.membership_plans?.name === "Premium"
-                  ? "Best"
-                  : membership.membership_plans?.name ?? "Plan"}
+                {membership.membership_plans?.name ?? "Plan"}
               </Text>
               <Text style={styles.muted}>
                 {formatCents(membership.membership_plans?.price_cents)} /{" "}

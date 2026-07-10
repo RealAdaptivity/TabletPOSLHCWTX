@@ -82,18 +82,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     let active = true;
 
-    supabase.auth.getSession().then(async ({ data }) => {
-      if (!active) return;
-      setSession(data.session);
-      if (data.session) await bootstrapCustomer(data.session);
-      setLoading(false);
-    });
+    (async () => {
+      try {
+        const { data } = await supabase.auth.getSession();
+        if (!active) return;
+        setSession(data.session);
+        if (data.session) await bootstrapCustomer(data.session);
+      } catch (e) {
+        // Never leave the app stuck on the loading spinner if session
+        // restore or profile bootstrap fails — fall through to the app.
+        console.error("[auth] session init failed:", e);
+      } finally {
+        if (active) setLoading(false);
+      }
+    })();
 
     const { data: sub } = supabase.auth.onAuthStateChange(
       async (_event, newSession) => {
         setSession(newSession);
         if (newSession) {
-          await bootstrapCustomer(newSession);
+          try {
+            await bootstrapCustomer(newSession);
+          } catch (e) {
+            console.error("[auth] bootstrap failed:", e);
+          }
         } else {
           setCustomer(null);
           rewardedForUser.current = null;
