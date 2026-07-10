@@ -64,8 +64,12 @@ export default function Pos() {
   }, [employee]);
 
   const refresh = useCallback(async () => {
-    const s = await shiftSummary();
-    setSummary(s);
+    try {
+      const s = await shiftSummary();
+      setSummary(s);
+    } catch (e) {
+      console.error("[pos] shift summary failed:", e);
+    }
   }, [shiftSummary]);
 
   useEffect(() => {

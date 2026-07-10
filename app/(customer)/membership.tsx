@@ -74,7 +74,7 @@ export default function MembershipScreen() {
             </View>
             {plan.description ? <Text style={styles.muted}>{plan.description}</Text> : null}
             <View style={{ gap: spacing.xs, marginTop: spacing.sm }}>
-              {plan.features.map((f, i) => (
+              {(plan.features ?? []).map((f, i) => (
                 <Text key={i} style={styles.feature}>
                   ✓ {f}
                 </Text>
