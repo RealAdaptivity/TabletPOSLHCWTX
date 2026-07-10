@@ -61,30 +61,33 @@ export default function MembershipScreen() {
           </Card>
         ) : null}
 
-        {plans.map((plan) => (
-          <Card key={plan.id} style={styles.planCard}>
-            <View style={styles.planHeader}>
-              <Text style={styles.planName}>{plan.name}</Text>
-              <Text style={styles.planPrice}>
-                {formatCents(plan.price_cents)}
-                <Text style={styles.perMonth}>
-                  /{plan.billing_period === "annual" ? "yr" : "mo"}
+        {plans.map((plan) => {
+          const mappedName = plan.name === "Express" ? "Good" : plan.name === "Deluxe" ? "Better" : plan.name === "Premium" ? "Best" : plan.name;
+          return (
+            <Card key={plan.id} style={styles.planCard}>
+              <View style={styles.planHeader}>
+                <Text style={styles.planName}>{mappedName}</Text>
+                <Text style={styles.planPrice}>
+                  {formatCents(plan.price_cents)}
+                  <Text style={styles.perMonth}>
+                    /{plan.billing_period === "annual" ? "yr" : "mo"}
+                  </Text>
                 </Text>
-              </Text>
-            </View>
-            {plan.description ? <Text style={styles.muted}>{plan.description}</Text> : null}
-            <View style={{ gap: spacing.xs, marginTop: spacing.sm }}>
-              {(plan.features ?? []).map((f, i) => (
-                <Text key={i} style={styles.feature}>
-                  ✓ {f}
-                </Text>
-              ))}
-            </View>
-            <View style={{ marginTop: spacing.md }}>
-              <Button title={`Choose ${plan.name}`} onPress={() => onSelectPlan(plan)} />
-            </View>
-          </Card>
-        ))}
+              </View>
+              {plan.description ? <Text style={styles.muted}>{plan.description}</Text> : null}
+              <View style={{ gap: spacing.xs, marginTop: spacing.sm }}>
+                {(plan.features ?? []).map((f, i) => (
+                  <Text key={i} style={styles.feature}>
+                    ✓ {f}
+                  </Text>
+                ))}
+              </View>
+              <View style={{ marginTop: spacing.md }}>
+                <Button title={`Choose ${mappedName}`} onPress={() => onSelectPlan(plan)} />
+              </View>
+            </Card>
+          );
+        })}
 
         <Text style={styles.disclaimer}>
           In-app checkout activates when the DRB Paetheon billing integration is connected.
