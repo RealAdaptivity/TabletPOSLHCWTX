@@ -36,8 +36,12 @@ export const radius = {
   pill: 999,
 };
 
-/** cents -> "$19.99" */
+/** cents -> "$19.99" (guards against Hermes/Intl quirks in release builds) */
 export function formatCents(cents: number | null | undefined): string {
   const v = (cents ?? 0) / 100;
-  return v.toLocaleString(undefined, { style: "currency", currency: "USD" });
+  try {
+    return v.toLocaleString(undefined, { style: "currency", currency: "USD" });
+  } catch {
+    return `$${v.toFixed(2)}`;
+  }
 }
