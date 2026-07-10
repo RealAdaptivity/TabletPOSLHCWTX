@@ -208,26 +208,23 @@ export default function Pos() {
 
         <Text style={styles.sectionTitle}>Memberships</Text>
         <View style={styles.grid}>
-          {plans.map((p) => {
-            const mappedName = p.name === "Express" ? "Good" : p.name === "Deluxe" ? "Better" : p.name === "Premium" ? "Best" : p.name;
-            return (
-              <ProductButton
-                key={p.id}
-                title={mappedName}
-                price={`${formatCents(p.price_cents)}/mo`}
-                active={ticket?.planId === p.id}
-                onPress={() =>
-                  setTicket({
-                    label: `${mappedName} Membership`,
-                    amountCents: p.price_cents,
-                    saleType: "membership",
-                    planId: p.id,
-                    points: 50,
-                  })
-                }
-              />
-            );
-          })}
+          {plans.map((p) => (
+            <ProductButton
+              key={p.id}
+              title={p.name}
+              price={`${formatCents(p.price_cents)}/mo`}
+              active={ticket?.planId === p.id}
+              onPress={() =>
+                setTicket({
+                  label: `${p.name} Membership`,
+                  amountCents: p.price_cents,
+                  saleType: "membership",
+                  planId: p.id,
+                  points: 50,
+                })
+              }
+            />
+          ))}
         </View>
       </ScrollView>
 
