@@ -3,16 +3,16 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createClient } from "@supabase/supabase-js";
 import { Platform } from "react-native";
 
-const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL ?? "";
-const supabaseAnonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY ?? "";
-
-if (!supabaseUrl || !supabaseAnonKey) {
-  // Surface misconfiguration early rather than failing with an opaque 401.
-  console.warn(
-    "[supabase] Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY. " +
-      "Copy .env.example to .env.",
-  );
-}
+// These are *publishable* (RLS-protected) client keys — safe to ship in the
+// bundle. We fall back to them so a release build never constructs the client
+// with an empty URL (supabase-js throws "supabaseUrl is required" on empty,
+// which would crash the app at launch when EXPO_PUBLIC_* env vars aren't baked
+// into the build). Overridable via env / eas.json for other environments.
+const supabaseUrl =
+  process.env.EXPO_PUBLIC_SUPABASE_URL || "https://pbgatghmutejbsmcedsw.supabase.co";
+const supabaseAnonKey =
+  process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY ||
+  "sb_publishable_WwJQsA6iuQcMiCP6vZWMgw_71wB5smo";
 
 // Untyped client: domain types live in ./database.types and are applied at
 // call sites via explicit casts. Regenerate a full typed schema later with
